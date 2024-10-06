@@ -7,8 +7,8 @@
             "command": "gfortran",
             "args": [
                 "-o",
-                "waveform",
-                "waveform.f90",
+                "epicentral",
+                "epicentral.f90",
                 "-L/usr/local/anaconda3/envs/FORTRAN/lib",
                 "-lpgplot",
                 "-lcpgplot",

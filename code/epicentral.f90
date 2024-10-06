@@ -5,7 +5,7 @@
     character(len = 100) :: line
 
     real, allocatable :: CONTOUR_X(:), CONTOUR_Y(:)
-    real :: ax_x_max, ax_x_min, ax_y_max, ax_y_min, scale_ratio
+    real :: ax_x_max, ax_x_min, ax_y_max, ax_y_min, margen
 
     ! open(newunit = unit_num, file = "../data/seisdata.txt", status = "old", action = "read")
     open(newunit = unit_num, file = "../data/Taiwan.txt", status = "old", action = "read")
@@ -26,31 +26,23 @@
     end do
     close(unit_num)
 
-    print *, CONTOUR_X, CONTOUR_Y
 
+    ! print *, CONTOUR_X, CONTOUR_Y
 
+    ! Set x, y lims
+    margen = 0.25  ! 25% larger
+    ax_x_min = minval(CONTOUR_X) - margen
+    ax_x_max = maxval(CONTOUR_X) + margen
+    ax_y_min = minval(CONTOUR_Y) - margen
+    ax_y_max = maxval(CONTOUR_Y) + margen
+
+    ! Plot
     call pgopen('1999_event_distribution.ps/VCPS')
-    ! call pgsubp(1, 3)
-
-    call pgsci(1) 
-    call pgslw(4)
-    call pgsch(1.5)
-    call pgscf(2)
-
-    ! Plot E1
-
-    scale_ratio = 1.25
-    ax_x_min = minval(CONTOUR_X) * scale_ratio
-    ax_x_max = maxval(CONTOUR_X) * scale_ratio
-    ax_y_min = minval(CONTOUR_Y) * scale_ratio
-    ax_y_max = maxval(CONTOUR_Y) * scale_ratio
-
     call pgsci(1)
     call pgenv(ax_x_min, ax_x_max, ax_y_min, ax_y_max, 0, 1)
+    call pgscf(2)
     call pglab('Longitude (E)', 'Latitude (N)', '1999 Event Distribution')
-    call pgsci(2)
     call pgline(n, CONTOUR_X, CONTOUR_Y)
-
     call pgclos()
 
     deallocate(CONTOUR_X, CONTOUR_Y)

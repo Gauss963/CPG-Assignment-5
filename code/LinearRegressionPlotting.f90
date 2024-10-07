@@ -1,17 +1,15 @@
 program LinearRegressionPlotting
     implicit none
     integer :: n
+    integer :: i, unit_num
     real, allocatable :: Xi(:), Yi(:)
     real :: a, b, sdv, R, std_a, std_b
-
-    ! real :: longitude, origin_longitude_2
-    ! real :: origin_longitude_1, origin_longitude_2
-    ! real :: origin_latitude_1, origin_latitude_2
+    real :: xsec
+    real :: ax_x_max, ax_x_min, ax_y_max, ax_y_min, ax_scale_ratio
+    real REGRESSION_X(2), REGRESSION_Y(2), reg_scale_ratio
 
     character(len = 100) :: line
-    integer :: i, unit_num
-
-    real :: xsec
+    character(len=100) :: equation
     integer iy, im, id, ih, mm
 
     ! Set the number of points
@@ -63,7 +61,47 @@ program LinearRegressionPlotting
     print *, 'Standard deviation of a: ', std_a
     print *, 'Standard deviation of b: ', std_b
 
+    ! Get equation
+    write(equation, '(A, F6.2, A, F6.2)') 'y = ', a, ' x + ', b
 
+
+    ! Scatter plot 
+    !! Set ax size
+    ax_scale_ratio = 0.25
+    reg_scale_ratio= 0.15
+    ax_x_min = minval(Xi) - abs(minval(Xi)) * ax_scale_ratio
+    ax_x_max = maxval(Xi) + abs(maxval(Xi)) * ax_scale_ratio
+    ax_y_min = minval(Yi) - abs(minval(Yi)) * ax_scale_ratio
+    ax_y_max = maxval(Yi) + abs(maxval(Yi)) * ax_scale_ratio
+
+    REGRESSION_X(1) = minval(Xi) - abs(minval(Xi)) * reg_scale_ratio
+    REGRESSION_X(2) = maxval(Xi) + abs(maxval(Xi)) * reg_scale_ratio
+    REGRESSION_Y(1) = b + a * REGRESSION_X(1)
+    REGRESSION_Y(2) = b + a * REGRESSION_X(2)
+
+    !! Plotting
+    call pgopen('EpicentralDistance-Time.ps/VCPS')
+    call pgsci(1)
+    call pgenv(ax_x_min, ax_x_max, ax_y_min, ax_y_max, 0, 1)
+    call pgscf(1)
+    call pglab('Epicentral Distance (km)', 'Time (s)', 'Epicentral Distance - Time')
+
+
+    call pgsci(2)
+    call pgpt(n, Xi, Yi, 5)
+    call pgsci(4)
+    call pgslw(2)
+    call pgline(2, REGRESSION_X, REGRESSION_Y)
+
+    call pgsci(1)
+    call pgtext(50.0, 8.0, equation)
+    call pgmtxt('T', 50, 8, 1.0, equation)
+
+
+    print *, REGRESSION_Y
+    
+    
+    
+    call pgclos()
     deallocate(Xi, Yi)
-
 end program LinearRegressionPlotting

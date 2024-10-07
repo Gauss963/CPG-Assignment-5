@@ -12,6 +12,9 @@ program LinearRegressionPlotting
     character(len=100) :: equation
     integer iy, im, id, ih, mm
 
+    real :: x_legend, y_legend
+    real :: legend_char_height, symbol_size, line_length, line_spacing, text_offset
+
     ! Set the number of points
     n = 30
 
@@ -62,7 +65,7 @@ program LinearRegressionPlotting
     print *, 'Standard deviation of b: ', std_b
 
     ! Get equation
-    write(equation, '(A, F6.2, A, F6.2)') 'y = ', a, ' x + ', b
+    write(equation, '(A, F6.2, A, F6.2)') 'y = ', a, 'x + ', b
 
 
     ! Scatter plot 
@@ -79,6 +82,15 @@ program LinearRegressionPlotting
     REGRESSION_Y(1) = b + a * REGRESSION_X(1)
     REGRESSION_Y(2) = b + a * REGRESSION_X(2)
 
+    x_legend = ax_x_min + 0.1 * (ax_x_max - ax_x_min)
+    y_legend = ax_y_max - 0.1 * (ax_y_max - ax_y_min)
+
+    legend_char_height = 1.0
+    symbol_size = 1.0
+    line_length = (ax_x_max - ax_x_min) * 0.05
+    line_spacing = (ax_y_max - ax_y_min) * 0.05
+    text_offset = (ax_x_max - ax_x_min) * 0.02
+
     !! Plotting
     call pgopen('EpicentralDistance-Time.ps/VCPS')
     call pgsci(1)
@@ -93,15 +105,28 @@ program LinearRegressionPlotting
     call pgslw(2)
     call pgline(2, REGRESSION_X, REGRESSION_Y)
 
+    call pgsls(3)
+    call pgline(2, REGRESSION_X, REGRESSION_Y + 2 * std_b)
+    call pgline(2, REGRESSION_X, REGRESSION_Y - 2 * std_b)
+
     call pgsci(1)
     call pgtext(50.0, 8.0, equation)
-    call pgmtxt('T', 50, 8, 1.0, equation)
 
 
-    print *, REGRESSION_Y
-    
-    
+
+    call pgsch(legend_char_height)
+    call pgsci(2)
+    call pgpt1(x_legend, y_legend + 0.1, 5)
+    call pgsci(1)
+    call pgptxt(x_legend + text_offset, y_legend, 0.0, 0.0, 'Data Points')
+    call pgsci(4)
+    call pgmove(x_legend, y_legend - line_spacing + 0.1)
+    call pgdraw(x_legend + line_length, y_legend - line_spacing + 0.1)
+    call pgsci(1)
+    call pgptxt(x_legend + text_offset, y_legend - line_spacing, 0.0, 0.0, 'Linear Regression')
+
     
     call pgclos()
+
     deallocate(Xi, Yi)
 end program LinearRegressionPlotting

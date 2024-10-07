@@ -12,7 +12,12 @@
     real :: ax_x_max, ax_x_min, ax_y_max, ax_y_min, margen
 
     real :: EQ_M_min, EQ_M_max
+    real :: EQ_Z_min, EQ_Z_max
     real :: symbol_size, size_min, size_max
+
+    real :: R_C0, G_C0, B_C0
+    real :: R_C1, G_C1, B_C1
+    real :: symbol_color_R, symbol_color_G, symbol_color_B
 
     ! Get contour data -------------------------------------------------------------------
     open(newunit = unit_num, file = "../data/Taiwan.txt", status = "old", action = "read")
@@ -68,6 +73,18 @@
     size_min = 0.5
     size_max = 2.0
 
+    ! Set scatter color
+    R_C0 = 0.121
+    G_C0 = 0.466
+    B_C0 = 0.706
+
+    R_C1 = 1.00
+    G_C1 = 0.498
+    B_C1 = 0.055
+
+    EQ_Z_min = minval(EQ_Z)
+    EQ_Z_max = maxval(EQ_Z)
+
 
     ! Plot Contour -----------------------------------------------------------------------
     call pgopen('1999_event_distribution.ps/VCPS')
@@ -75,21 +92,32 @@
     call pgenv(ax_x_min, ax_x_max, ax_y_min, ax_y_max, 0, 1)
     call pgscf(1)
     call pglab('Longitude (E)', 'Latitude (N)', '1999 Event Distribution')
-    call pgline(n, CONTOUR_X, CONTOUR_Y)
+    ! call pgline(n, CONTOUR_X, CONTOUR_Y)
     
 
     ! Plot symbol size with "EQ_Z", chahge to EQ_M later ---------------------------------
-    call pgsci(2)
+    ! call pgscr(42, 31/255, 119/255, 180/255)
+    call pgscr(42, R_C0, G_C0, B_C0)
+    call pgsci(13)
+    call pgsci(42)
+
     do i = 1, m
         symbol_size = size_min + (EQ_Z(i) - EQ_M_min) * (size_max - size_min) / (EQ_M_max - EQ_M_min)
         
+        symbol_color_R = R_C0 + (EQ_Z(i) - EQ_Z_min) * (R_C1 - R_C0) / (EQ_Z_max - EQ_Z_min)
+        symbol_color_G = G_C0 + (EQ_Z(i) - EQ_Z_min) * (G_C1 - G_C0) / (EQ_Z_max - EQ_Z_min)
+        symbol_color_B = B_C0 + (EQ_Z(i) - EQ_Z_min) * (B_C1 - B_C0) / (EQ_Z_max - EQ_Z_min)
+
+
+        call pgscr(42, symbol_color_R, symbol_color_G, symbol_color_B)
         call pgsch(symbol_size)
         
+
         call pgpt1(EQ_X(i), EQ_Y(i), 22)
     end do
-    call pgsch(1.0)
     
-    
+    call pgsci(1)
+    call pgline(n, CONTOUR_X, CONTOUR_Y)
     
     call pgclos()
 

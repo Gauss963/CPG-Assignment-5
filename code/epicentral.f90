@@ -64,6 +64,7 @@
     ax_y_min = minval(CONTOUR_Y) - margen
     ax_y_max = maxval(CONTOUR_Y) + margen
 
+    ! Set scatter size lims
     EQ_M_min = minval(EQ_Y)
     EQ_M_max = maxval(EQ_Y)
     size_min = 0.5
@@ -78,7 +79,6 @@
     call pglab('Longitude (E)', 'Latitude (N)', '1999 Event Distribution')
     call pgline(n, CONTOUR_X, CONTOUR_Y)
     
-
     ! Plot symbol size with "EQ_Y", chahge to EQ_M later
     call pgsci(2)
     do i = 1, n

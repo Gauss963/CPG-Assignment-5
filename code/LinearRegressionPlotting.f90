@@ -120,10 +120,19 @@ program LinearRegressionPlotting
     call pgsci(1)
     call pgptxt(x_legend + text_offset, y_legend, 0.0, 0.0, 'Data Points')
     call pgsci(4)
+    
+    call pgsls(1)
     call pgmove(x_legend, y_legend - line_spacing + 0.1)
-    call pgdraw(x_legend + line_length, y_legend - line_spacing + 0.1)
+    call pgdraw(x_legend + line_length - 5, y_legend - line_spacing + 0.1)
     call pgsci(1)
     call pgptxt(x_legend + text_offset, y_legend - line_spacing, 0.0, 0.0, 'Linear Regression')
+
+    call pgsls(3)
+    call pgsci(4)
+    call pgmove(x_legend, y_legend - 2 * line_spacing + 0.1)
+    call pgdraw(x_legend + line_length, y_legend - 2 * line_spacing + 0.1)
+    call pgsci(1)
+    call pgptxt(x_legend + text_offset + 5, y_legend - 2 * line_spacing, 0.0, 0.0, '95% C.I.')
 
     
     call pgclos()

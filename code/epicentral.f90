@@ -30,7 +30,7 @@
         if (io_status /= 0) exit
     end do
     close(unit_num)
-    ! Get contour data -------------------------------------------------------------------
+
 
     ! Get earthquake data ----------------------------------------------------------------
     open(newunit = unit_num, file = "../data/1999.lis", status = "old", action = "read")
@@ -53,24 +53,23 @@
         if (io_status /= 0) exit
     end do
     close(unit_num)
-    ! Get earthquake data ----------------------------------------------------------------
 
 
-    ! Set x, y lims
+    ! Set x, y lims ----------------------------------------------------------------------
     margen = 0.25  ! 25% larger
     ax_x_min = minval(CONTOUR_X) - margen
     ax_x_max = maxval(CONTOUR_X) + margen
     ax_y_min = minval(CONTOUR_Y) - margen
     ax_y_max = maxval(CONTOUR_Y) + margen
 
-    ! Set scatter size lims
+    ! Set scatter size lims --------------------------------------------------------------
     EQ_M_min = minval(EQ_Y)
     EQ_M_max = maxval(EQ_Y)
     size_min = 0.5
     size_max = 2.0
 
 
-    ! Plot Contour
+    ! Plot Contour -----------------------------------------------------------------------
     call pgopen('1999_event_distribution.ps/VCPS')
     call pgsci(1)
     call pgenv(ax_x_min, ax_x_max, ax_y_min, ax_y_max, 0, 1)
@@ -78,7 +77,8 @@
     call pglab('Longitude (E)', 'Latitude (N)', '1999 Event Distribution')
     call pgline(n, CONTOUR_X, CONTOUR_Y)
     
-    ! Plot symbol size with "EQ_Y", chahge to EQ_M later
+
+    ! Plot symbol size with "EQ_Y", chahge to EQ_M later ---------------------------------
     call pgsci(2)
     do i = 1, n
         symbol_size = size_min + (EQ_Y(i) - EQ_M_min) * (size_max - size_min) / (EQ_M_max - EQ_M_min)

@@ -12,8 +12,7 @@
     real :: ax_x_max, ax_x_min, ax_y_max, ax_y_min, margen
 
     real :: EQ_M_min, EQ_M_max
-    real :: size_min, size_max
-    real :: symbol_size
+    real :: symbol_size, size_min, size_max
 
     ! Get contour data -------------------------------------------------------------------
     open(newunit = unit_num, file = "../data/Taiwan.txt", status = "old", action = "read")

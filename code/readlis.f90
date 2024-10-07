@@ -33,7 +33,6 @@
 
 
     print *, EQ_Z
-    ! print *, EQ_Y
 
 
     deallocate(EQ_X, EQ_Y, EQ_Z, EQ_M)

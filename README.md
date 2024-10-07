@@ -33,3 +33,4 @@
 
 5. **Plotting results**
    - See slides.
+   - <img src="./plot/1999_event_distribution.png" width="400">

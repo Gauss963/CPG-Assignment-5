@@ -1,4 +1,4 @@
- program waveform
+ program readlis
     implicit none
     character(len = 100) :: line
     
@@ -36,4 +36,4 @@
 
 
     deallocate(EQ_X, EQ_Y, EQ_Z, EQ_M)
-end program waveform
+end program readlis

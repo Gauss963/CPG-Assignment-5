@@ -1,4 +1,4 @@
- program waveform
+ program epicentral
     implicit none
     character(len = 100) :: line
     
@@ -97,4 +97,4 @@
 
     deallocate(CONTOUR_X, CONTOUR_Y)
     deallocate(EQ_X, EQ_Y, EQ_Z, EQ_M)
-end program waveform
+end program epicentral

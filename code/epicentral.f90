@@ -50,7 +50,7 @@
 
     open(newunit=unit_num, file = "../data/1999.lis", status = "old", action = "read")
     do i = 1, m
-        read(unit_num, '(18X, F2.0, F5.2, F3.0, F5.2, F5.2)', iostat=io_status) x, y, z, w, EQ_Z(i)
+        read(unit_num, '(18X, F2.0, F5.2, F3.0, F5.2, F6.2, F5.2)', iostat=io_status) x, y, z, w, EQ_Z(i), EQ_M(i)
         EQ_X(i) = (z + w / 60)
         EQ_Y(i) = (x + y / 60)
 
@@ -68,10 +68,10 @@
     ax_y_max = maxval(EQ_Y) + margen * 2
 
     ! Set scatter size lims --------------------------------------------------------------
-    EQ_M_min = minval(EQ_Z)
-    EQ_M_max = maxval(EQ_Z)
+    EQ_M_min = minval(EQ_M)
+    EQ_M_max = maxval(EQ_M)
     size_min = 0.5
-    size_max = 2.0
+    size_max = 3.0
 
     ! Set scatter color
     R_C0 = 0.121
@@ -97,12 +97,12 @@
 
     ! Plot symbol size with "EQ_Z", chahge to EQ_M later ---------------------------------
     ! call pgscr(42, 31/255, 119/255, 180/255)
-    call pgscr(42, R_C0, G_C0, B_C0)
-    call pgsci(13)
-    call pgsci(42)
+    ! call pgscr(42, R_C0, G_C0, B_C0)
+    ! call pgsci(13)
+    ! call pgsci(42)
 
     do i = 1, m
-        symbol_size = size_min + (EQ_Z(i) - EQ_M_min) * (size_max - size_min) / (EQ_M_max - EQ_M_min)
+        symbol_size = size_min + (EQ_M(i) - EQ_M_min) * (size_max - size_min) / (EQ_M_max - EQ_M_min)
         
         symbol_color_R = R_C0 + (EQ_Z(i) - EQ_Z_min) * (R_C1 - R_C0) / (EQ_Z_max - EQ_Z_min)
         symbol_color_G = G_C0 + (EQ_Z(i) - EQ_Z_min) * (G_C1 - G_C0) / (EQ_Z_max - EQ_Z_min)
@@ -110,6 +110,7 @@
 
 
         call pgscr(42, symbol_color_R, symbol_color_G, symbol_color_B)
+        call pgsci(42)
         call pgsch(symbol_size)
         
 

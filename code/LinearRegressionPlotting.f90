@@ -137,5 +137,7 @@ program LinearRegressionPlotting
     
     call pgclos()
 
+    ! y_err = x.std() * np.sqrt(1/len(x) + (x - x.mean())**2 / np.sum((x - x.mean())**2))
+
     deallocate(Xi, Yi)
 end program LinearRegressionPlotting

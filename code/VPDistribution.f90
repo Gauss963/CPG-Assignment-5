@@ -16,6 +16,14 @@ program VPDistribution
 
     real :: Vp_dummy
     real :: Vp_perturbation_dummy
+    real :: x_dummy
+
+
+    integer :: int_value
+
+
+
+    character(LEN=20) :: legend
 
     ! Get earthquake data ----------------------------------------------------------------
     open(newunit = unit_num, file = "../data/Vp_prof.dat", status = "old", action = "read")
@@ -77,7 +85,28 @@ program VPDistribution
         call pgrect(Distance(i) - 1.0, Distance(i) + 1.0, Depth(i) - 1.0, Depth(i) + 1.0)
 
     end do
-    
+
+
+    do i = 30, 50
+        x_dummy = i
+        Vp_dummy = (x_dummy - 30) * 0.3 + 3.0
+
+
+        symbol_color_R = get_color_R(Vp_dummy)
+        symbol_color_G = get_color_G(Vp_dummy)
+        symbol_color_B = get_color_B(Vp_dummy)
+
+        call pgscr(44, symbol_color_R, symbol_color_G, symbol_color_B)
+        call pgsci(44)
+        call pgrect(x_dummy, x_dummy + 1, real(-99), real(-100))
+
+        if (mod(i, 5) == 0) then
+            call pgsci(1)
+            int_value = nint(Vp_dummy)
+            write(legend, '(I0)') int_value
+            call pgptxt(x_dummy - 0.5, real(-103), 0.0, 0.0, legend)
+        end if
+    end do
 
 
     ! Second Plot
@@ -107,11 +136,29 @@ program VPDistribution
         call pgscr(43, symbol_color_R, symbol_color_G, symbol_color_B)
         call pgsci(43)
         call pgrect(Distance(i) - 1.0, Distance(i) + 1.0, Depth(i) - 1.0, Depth(i) + 1.0)
+    
+    end do
 
-        ! if (i < 40) then
-        !     print *, Vp_perturbation(i)
-        ! end if
 
+    do i = 30, 50
+        x_dummy = i
+        Vp_dummy = (x_dummy - 30) * 0.01 - 0.1
+
+
+        symbol_color_R = get_RB_R(Vp_dummy)
+        symbol_color_G = get_RB_G(Vp_dummy)
+        symbol_color_B = get_RB_B(Vp_dummy)
+
+        call pgscr(45, symbol_color_R, symbol_color_G, symbol_color_B)
+        call pgsci(45)
+        call pgrect(x_dummy, x_dummy + 1, real(-99), real(-100))
+
+        if (mod(i, 10) == 0) then
+            call pgsci(1)
+            int_value = nint(Vp_dummy)
+            write(legend, '(F3.1)') Vp_dummy
+            call pgptxt(x_dummy - 2.5, real(-103), 0.0, 0.0, legend)
+        end if
     end do
     
     call pgclos()
